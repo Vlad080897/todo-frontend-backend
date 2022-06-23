@@ -1,16 +1,7 @@
-import {
-  GETTING_RESPONSE,
-  GET_TASKS_FAILED,
-  GET_TASKS_SUCSSES,
-  DELETE_SUCSSES,
-  ADD_SUCSSES,
-  GET_ITEMS_LEFT,
-  COMPLETE_TASK_SUCSSES,
-  CLEAR_SUCSSES,
-  CHECK_ALL_SUCSSES,
-  TOGGLE_EDIT_MODE
-} from './../actions/actionsNames';
-import { ActionsType, TaskType } from './../types/todoTypes';
+import { ActionType, getType } from 'typesafe-actions';
+import { actions } from '../actions/actions';
+import { TOGGLE } from './../actions/actionsNames';
+import { TaskType } from './../types/todoTypes';
 
 const initialState = {
   tasks: [] as TaskType[],
@@ -18,59 +9,87 @@ const initialState = {
   loading: false,
   error: null as string | null
 }
-const todoReducer = (state: todoStateType = initialState, action: ActionsType) => {
+
+
+const todoReducer = (state: todoStateType = initialState, action: ActionType<typeof actions>) => {
   switch (action.type) {
-    case GETTING_RESPONSE: {
+    case getType(actions.getTasksRequest): {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+    case getType(actions.getTasksSucsses): {
+      return {
+        ...state,
+        tasks: [...action.payload.newTasks],
+        error: null,
+        loading: false,
+      }
+    }
+    case getType(actions.getTasksFailed): {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.massage,
+      }
+    }
+    case getType(actions.addTaskRequest): {
       return {
         ...state,
         loading: true
       }
     }
-    case GET_ITEMS_LEFT: {
+    case getType(actions.addTaskSucsses): {
       return {
         ...state,
-        itemsLeft: state.tasks.filter(t => t.completed === false).length,
-        loading: false
-      }
-    }
-    case GET_TASKS_SUCSSES: {
-      return {
-        ...state,
-        tasks: [...action.payload],
+        tasks: [...state.tasks, action.payload.newTaskBody],
         loading: false,
+        error: null,
+      }
+    }
+    case getType(actions.addTaskFailed): {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.massage
+      }
+    }
+    case getType(actions.deleteTaskRequest): {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+    case getType(actions.deleteTaskSucsses): {
+      return {
+        ...state,
+        tasks: [...state.tasks.filter(t => t._id !== action.payload.id)],
+        loading: false,
+        error: null,
+      }
+    }
+    case getType(actions.deleteTaskFailed): {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.massage,
+      }
+    }
+    case getType(actions.completeTaskRequest): {
+      return {
+        ...state,
+        loading: true,
         error: null
-
-
       }
     }
-    case GET_TASKS_FAILED: {
+    case getType(actions.completeTaskSucsses): {
       return {
         ...state,
-        error: action.payload,
-        loading: false
-      }
-    }
-    case DELETE_SUCSSES: {
-      return {
-        ...state,
-        error: null,
-        tasks: [...state.tasks.filter(t => t._id !== action.payload._id)],
-
-      }
-    }
-    case ADD_SUCSSES: {
-      return {
-        ...state,
-        error: null,
-        tasks: [...state.tasks, action.payload]
-      }
-    }
-    case COMPLETE_TASK_SUCSSES: {
-      return {
-        ...state,
+        loading: false,
         error: null,
         tasks: [...state.tasks.map(t => {
-          if (t._id === action.id) {
+          if (t._id === action.payload.id) {
             return {
               ...t,
               completed: !t.completed
@@ -80,35 +99,84 @@ const todoReducer = (state: todoStateType = initialState, action: ActionsType) =
         })]
       }
     }
-    case CLEAR_SUCSSES: {
+    case getType(actions.completeTaskFailed): {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.massage
+      }
+    }
+    case getType(actions.clearTasksRequest): {
       return {
         ...state,
         error: null,
-        tasks: [...action.newTasks]
+        loading: true,
       }
     }
-    case CHECK_ALL_SUCSSES: {
+    case getType(actions.clearTasksSucsses): {
       return {
         ...state,
         error: null,
-        tasks: [...action.newTasks]
+        loading: false,
+        tasks: [...action.payload.newTasks]
       }
     }
-    case TOGGLE_EDIT_MODE: {
+    case getType(actions.clearTasksFailed): {
+      return {
+        ...state,
+        error: action.payload.massage,
+        loading: false
+      }
+    }
+    case getType(actions.checkAllRequest): {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+    case getType(actions.checkAllSucsses): {
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        tasks: [...action.payload.newTasks]
+      }
+    }
+    case getType(actions.checkAllFailed): {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.massage,
+      }
+    }
+    case getType(actions.toggleRequest): {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+    case getType(actions.toggleSucsses): {
       return {
         ...state,
         error: null,
         loading: false,
         tasks: state.tasks.map(t => {
-          if (t._id === action.id) {
+          if (t._id === action.payload.id) {
             return {
               ...t,
               isEdit: !t.isEdit,
-              description: action.description
+              description: action.payload.description
             }
           }
           return t
         })
+      }
+    }
+    case getType(actions.toggleFailed): {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.massage
       }
     }
 
@@ -119,6 +187,4 @@ const todoReducer = (state: todoStateType = initialState, action: ActionsType) =
 export default todoReducer
 
 export type todoStateType = typeof initialState;
-
-
 

@@ -53,6 +53,7 @@ const Todo = () => {
 
   useEffect(() => {
     isAllChecked();
+    const itemsLeft = tasks.filter(t => t.completed !== true).length;
   }, [tasks])
 
   useEffect(() => {
@@ -60,7 +61,7 @@ const Todo = () => {
   }, [tasks, path])
 
   const handleCheckAll = () => {
-    dispatch({ type: CHECK_ALL_CLICK, path: location.pathname });
+    dispatch({ type: CHECK_ALL_CLICK, checkAllBtn });
   }
 
   return (
@@ -71,7 +72,6 @@ const Todo = () => {
         id="toggle-all"
         onChange={handleCheckAll}
         ref={checkAllBtn}
-      //disabled={loading ? true : false}
       />}
 
       <label htmlFor="toggle-all"></label>

@@ -1,10 +1,11 @@
-import { actions } from "../actions/actions"
-
 export interface TaskType {
-  _id: string,
-  description: string,
-  completed: boolean,
+  completed: boolean
+  createdAt: string
+  description: string
   isEdit: boolean
+  updatedAt: string
+  __v: number
+  _id: string
 }
 
 export type DeleteTaskAction = {
@@ -31,6 +32,3 @@ export type ToggleEditMode = {
   isEdit: boolean
 }
 
-//infer type of each action
-type InferValueType<T> = T extends { [key: string]: infer U } ? U : never;
-export type ActionsType = ReturnType<InferValueType<typeof actions>>;

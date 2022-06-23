@@ -11,11 +11,16 @@ const getTasks = async (req, res) => {
 }
 
 const addTask = async (req, res) => {
+  const { description } = req.body
+  if (!description || !description.trim()) {
+    return res.status(404).json({ err: 'Description is required' });
+  }
   try {
     const newTask = await Todo.create({ ...req.body });
     res.status(200).json(newTask);
   } catch (error) {
-    res.status(404).json({ error: 'Todo validation failed' })
+    console.log(error);
+    res.status(404).json({ err: 'Todo validation failed' })
   }
 }
 
@@ -38,7 +43,6 @@ const clearCompleted = async (req, res) => {
   } catch (error) {
     return res.status(404).json({ err: 'Todo validation failed' })
   }
-
 }
 
 const checkAll = async (req, res) => {

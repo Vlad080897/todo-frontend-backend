@@ -1,78 +1,37 @@
+import { GET_TASKS, ADD_TASK, DELETE_TASK, COMPLETE_TASK, CLEAR_TASKS, CHECK_ALL, TOGGLE } from './actionsNames';
 import { TaskType } from './../types/todoTypes';
-import {
-  ADD_SUCSSES,
-  CHECK_ALL_SUCSSES,
-  CLEAR_SUCSSES,
-  COMPLETE_TASK_SUCSSES,
-  DELETE_SUCSSES,
-  GETTING_RESPONSE,
-  GET_ITEMS_LEFT,
-  GET_TASKS_FAILED,
-  GET_TASKS_SUCSSES,
-  TOGGLE_EDIT_MODE
-} from './actionsNames';
-
+import { createAction } from 'typesafe-actions';
 
 export const actions = {
-  gettingResponse: () => {
-    return {
-      type: GETTING_RESPONSE
-    } as const
-  },
-  getTasksSucsses: (payload: TaskType[]) => {
-    return {
-      type: GET_TASKS_SUCSSES,
-      payload
-    } as const
-  },
-  getTasksFailed: (payload: string) => {
-    return {
-      type: GET_TASKS_FAILED,
-      payload
-    } as const
-  },
-  deleteTask: (payload: TaskType) => {
-    return {
-      type: DELETE_SUCSSES,
-      payload
-    } as const
-  },
-  addNewTasks: (payload: TaskType) => {
-    return {
-      type: ADD_SUCSSES,
-      payload
-    } as const
-  },
-  completeTask: (id: string) => {
-    return {
-      type: COMPLETE_TASK_SUCSSES,
-      id
-    } as const
-  },
-  clearCompleted: (newTasks: TaskType[]) => {
-    return {
-      type: CLEAR_SUCSSES,
-      newTasks
-    } as const
-  },
-  checkAll: (newTasks: TaskType[]) => {
-    return {
-      type: CHECK_ALL_SUCSSES,
-      newTasks
-    } as const
-  },
-  getItemsLeft: () => {
-    return {
-      type: GET_ITEMS_LEFT,
-    } as const
-  },
-  toggleEditMode: (id: string, description: string) => {
-    return {
-      type: TOGGLE_EDIT_MODE,
-      id,
-      description
-    } as const
-  }
+  getTasksRequest: createAction(GET_TASKS.REQUEST)(),
+  getTasksSucsses: createAction(GET_TASKS.SUCSSES)<{ newTasks: TaskType[] }>(),
+  getTasksFailed: createAction(GET_TASKS.FAILED)<{ massage: string }>(),
+
+  addTaskRequest: createAction(ADD_TASK.REQUEST)(),
+  addTaskSucsses: createAction(ADD_TASK.SUCSSES)<{ newTaskBody: TaskType }>(),
+  addTaskFailed: createAction(ADD_TASK.FAILED)<{ massage: string }>(),
+
+  deleteTaskRequest: createAction(DELETE_TASK.REQUEST)(),
+  deleteTaskSucsses: createAction(DELETE_TASK.SUCSSES)<{ id: string }>(),
+  deleteTaskFailed: createAction(DELETE_TASK.FAILED)<{ massage: string }>(),
+
+  completeTaskRequest: createAction(COMPLETE_TASK.REQUEST)(),
+  completeTaskSucsses: createAction(COMPLETE_TASK.SUCSSES)<{ id: string }>(),
+  completeTaskFailed: createAction(COMPLETE_TASK.FAILED)<{ massage: string }>(),
+
+  clearTasksRequest: createAction(CLEAR_TASKS.REQUEST)(),
+  clearTasksSucsses: createAction(CLEAR_TASKS.SUCSSES)<{ newTasks: TaskType[] }>(),
+  clearTasksFailed: createAction(CLEAR_TASKS.FAILED)<{ massage: string }>(),
+
+  checkAllRequest: createAction(CHECK_ALL.REQUEST)(),
+  checkAllSucsses: createAction(CHECK_ALL.SUCSSES)<{ newTasks: TaskType[] }>(),
+  checkAllFailed: createAction(CHECK_ALL.FAILED)<{ massage: string }>(),
+
+  toggleRequest: createAction(TOGGLE.REQUEST)(),
+  toggleSucsses: createAction(TOGGLE.SUCSSES)<{ id: string, description: string }>(),
+  toggleFailed: createAction(TOGGLE.FAILED)<{ massage: string }>()
+
 }
+
 
 

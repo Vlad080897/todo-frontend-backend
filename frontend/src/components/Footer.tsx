@@ -2,14 +2,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CLEAR_CLICK } from '../actions/actionsNames';
 import { active, all, completed } from '../routes/routes';
-import { getAllTasksLength, getItemsLeftSelector, getTasksSelector } from '../selectors/todoSelectors';
+import { getAllTasksLength, getTasksSelector } from '../selectors/todoSelectors';
 
-const Footer = () => {
+const Footer: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const itemsLeft = useSelector(getItemsLeftSelector);
+  const itemsLeft = useSelector(getTasksSelector).filter(t => t.completed !== true).length
   const haveTasks = useSelector(getAllTasksLength);
   const haveCompleted = useSelector(getTasksSelector).filter(t => t.completed === true).length
 
