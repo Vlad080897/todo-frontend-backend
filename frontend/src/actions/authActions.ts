@@ -5,5 +5,5 @@ export const authActions = {
   getUserAuth: createAction(GET_USER.REQUEST)(),
   getUserAuthSucsses: createAction(GET_USER.SUCSSES)<{ user: { id: string, email: string } } | null>(),
   getUserAuthFailed: createAction(GET_USER.FAILED)<{ massage: string }>(),
-  logUserOut: createAction(LOG_OUT.SUCSSES)<{ massage: string }>(),
+  logUserOut: createAction(LOG_OUT.SUCSSES)(),
 }

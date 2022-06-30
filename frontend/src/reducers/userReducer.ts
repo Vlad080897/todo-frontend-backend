@@ -46,4 +46,4 @@ const userReducer = (state: UserStateType = initialState, action: ActionType<typ
 
 export default userReducer;
 
-type UserStateType = typeof initialState;
+export type UserStateType = typeof initialState;
