@@ -2,6 +2,7 @@ import { authActions } from './../actions/authActions';
 import { ActionType, getType } from 'typesafe-actions';
 import { actions } from '../actions/todosActions';
 import { TaskType } from './../types/todoTypes';
+import { store } from '../redux/store';
 
 const initialState = {
   tasks: [] as TaskType[],
@@ -11,7 +12,7 @@ const initialState = {
 }
 
 
-const todoReducer = (state: todoStateType = initialState, action: ActionType<typeof actions> | ActionType<typeof authActions>) => {
+export const todoReducer = (state: todoStateType = initialState, action: ActionType<typeof actions> | ActionType<typeof authActions>) => {
   switch (action.type) {
     case getType(actions.getTasksRequest): {
       return {
@@ -114,11 +115,12 @@ const todoReducer = (state: todoStateType = initialState, action: ActionType<typ
       }
     }
     case getType(actions.clearTasksSucsses): {
+      
       return {
         ...state,
         error: null,
         loading: false,
-        tasks: [...action.payload.newTasks]
+        tasks: action.payload.newTasks
       }
     }
     case getType(actions.clearTasksFailed): {

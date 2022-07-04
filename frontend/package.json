@@ -58,6 +58,7 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/bcryptjs": "^2.4.2",
-    "@types/js-cookie": "^3.0.2"
+    "@types/js-cookie": "^3.0.2",
+    "redux-saga-test-plan": "^4.0.5"
   }
 }

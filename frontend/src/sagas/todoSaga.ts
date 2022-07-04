@@ -2,12 +2,11 @@ import axios, { AxiosResponse } from 'axios';
 import { put, select, takeEvery } from "redux-saga/effects";
 import {
   ADD_TASK,
-  CHECK_ALL,
-  CLEAR_TASKS,
-  COMPLETE_TASK, DELETE_TASK, GET_TASKS, TOGGLE, UPDATE
+  CHECK_ALL, COMPLETE_TASK, DELETE_TASK, GET_TASKS, TOGGLE, UPDATE
 } from "../actions/actionsNames";
 import { authActions } from '../actions/authActions';
 import { actions } from '../actions/todosActions';
+import { CLEAR_TASKS } from './../actions/actionsNames';
 import { todoApi } from './../api/todoApi';
 import { ServerResponse } from './../enums/todoEnums';
 import { getTasksSelector } from './../selectors/todoSelectors';
@@ -19,50 +18,49 @@ import {
   ToggleEditMode
 } from './../types/todoTypes';
 
-function* getTasks(action: getTasksActionType) {
+export function* getTasks(action: getTasksActionType) {
   yield put(actions.getTasksRequest());
   try {
-    const response: AxiosResponse<{ allTasks: TaskType[] }, any> = yield todoApi.getTasks(action.userId);
-    if (response.status === ServerResponse.SUCSSES) {
+    const response: (AxiosResponse<({ allTasks: TaskType[] }), any> | undefined) = yield todoApi.getTasks(action.userId);
+    if (response?.status === ServerResponse.SUCSSES) {
       const { allTasks } = response.data;
       yield put(actions.getTasksSucsses({ newTasks: allTasks }));
     }
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      const massage = err.message;
+      const massage = (err.response?.data as { error: string }).error;
       yield put(actions.getTasksFailed({ massage }));
     }
   }
 }
 
-function* addNewTask(action: AddNewTaskAction) {
+export function* addNewTask(action: AddNewTaskAction) {
   yield put(actions.addTaskRequest());
   const { newTask } = action;
   try {
-    const response: AxiosResponse<TaskType, any> = yield todoApi.addNewTasks(newTask)
-    if (response.status === ServerResponse.SUCSSES) {
+    const response: (AxiosResponse<TaskType, any> | undefined) = yield todoApi.addNewTasks(newTask)
+    if (response?.status === ServerResponse.SUCSSES) {
       const newTaskBody = response.data
       yield put(actions.addTaskSucsses({ newTaskBody }));
     }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
-
       if (error.response.status === ServerResponse.NOT_AUTH) {
         yield put(authActions.getUserAuthSucsses(null));
         return;
       }
-      const massage = (error.response.data as { err: string }).err
+      const massage = (error.response.data as { error: string }).error
       yield put(actions.addTaskFailed({ massage }));
     }
   }
 }
 
-function* deleteTask(action: DeleteTaskAction) {
+export function* deleteTask(action: DeleteTaskAction) {
   yield put(actions.deleteTaskRequest());
   const { id } = action
   try {
-    const response: AxiosResponse<TaskType, any> = yield todoApi.deleteTask(id)
-    if (response.status === ServerResponse.SUCSSES) {
+    const response: (AxiosResponse<{ deletedTask: TaskType }, any> | undefined) = yield todoApi.deleteTask(id)
+    if (response?.status === ServerResponse.SUCSSES) {
       yield put(actions.deleteTaskSucsses({ id }));
     }
   } catch (error) {
@@ -71,18 +69,18 @@ function* deleteTask(action: DeleteTaskAction) {
         yield put(authActions.getUserAuthSucsses(null));
         return;
       }
-      const massage = error.message;
+      const massage = (error.response.data as { error: string }).error
       yield put(actions.deleteTaskFailed({ massage }));
     }
   }
 }
 
-function* completeTask(action: completeTaskAction) {
+export function* completeTask(action: completeTaskAction) {
   yield put(actions.completeTaskRequest());
   const { id, completed } = action
   try {
-    const response: AxiosResponse<TaskType, any> = yield todoApi.completeTask(id, !completed)
-    if (response.status === ServerResponse.SUCSSES) {
+    const response: (AxiosResponse<TaskType, any> | undefined) = yield todoApi.completeTask(id, !completed)
+    if (response?.status === ServerResponse.SUCSSES) {
       const id = response.data._id
       yield put(actions.completeTaskSucsses({ id }));
     }
@@ -92,20 +90,23 @@ function* completeTask(action: completeTaskAction) {
         yield put(authActions.getUserAuthSucsses(null));
         return;
       }
-      const massage = error.message;
+      const massage = (error.response.data as { error: string }).error
       yield put(actions.completeTaskFailed({ massage }));
     }
   }
 }
 
-function* clearCompleted() {
+export function* clearCompleted(action: {
+  type: string
+}) {
   yield put(actions.clearTasksRequest());
   try {
-    const response: AxiosResponse<any, any> = yield todoApi.clearCompleted();
-    if (response.status === ServerResponse.SUCSSES) {
+    const response: (AxiosResponse<string | any> | undefined) = yield todoApi.clearCompleted();
+
+    if (response?.status === ServerResponse.SUCSSES) {
       const tasks: TaskType[] = yield select(getTasksSelector);
-      const newTasks = tasks.filter(t => t.completed !== true)
-      yield put(actions.clearTasksSucsses({ newTasks }))
+      const newTasks = tasks.filter(t => t.completed !== true);
+      yield put(actions.clearTasksSucsses({ newTasks: newTasks }))
     }
 
   } catch (error) {

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
-const checkIsUser = (req: Request, res: Response, next: NextFunction) => {
+export const checkIsUser = (req: Request, res: Response, next: NextFunction) => {
   const token = (req.cookies as { jwt: string }).jwt;
   if (token) {
     jwt.verify(token, 'asfasfasfsdnlsbkbqwi', async (err: Error, _) => {
@@ -14,8 +14,4 @@ const checkIsUser = (req: Request, res: Response, next: NextFunction) => {
     return;
   }
   res.status(401).send('User is not autorized');
-}
-
-module.exports = {
-  checkIsUser,
 }

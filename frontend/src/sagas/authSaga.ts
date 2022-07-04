@@ -20,8 +20,9 @@ function* getUser() {
     }
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      if (error.response?.status === ServerResponse.NOT_AUTH) {
+      if (error.response?.status === (ServerResponse.NOT_AUTH || ServerResponse.INCORRECT_TOKEN)) {
         yield put(authActions.getUserAuthSucsses(null));
+        return;
       }
       console.log(error);
     }

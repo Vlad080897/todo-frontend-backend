@@ -31,7 +31,7 @@ export type completeTaskAction = {
   type: string
   completed: boolean
   id: string
-  path: string
+  //path: string
 }
 
 export type ToggleEditMode = {

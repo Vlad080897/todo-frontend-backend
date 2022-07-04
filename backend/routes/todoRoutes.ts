@@ -1,19 +1,10 @@
 import express from 'express';
 
-const {
-  getTasks,
-  addTask,
-  deleteTasks,
-  updateTask,
-  clearCompleted,
-  checkAll,
-} = require('../controllers/todoControllers')
+import { getTasks, addTask, deleteTasks, updateTask, clearCompleted, checkAll } from '../controllers/todoControllers';
 
 import { loginPost, signupPost, logout, getUser, getNewToken } from '../controllers/authControllers';
 
-const {
-  checkIsUser,
-} = require('../middlewares/authMiddlware')
+import { checkIsUser } from '../middlewares/authMiddlware';
 const router = express.Router();
 
 router.post('/token', getNewToken)
