@@ -1,5 +1,6 @@
 {
   "proxy": "http://localhost:8000",
+  "type": "module",
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
@@ -59,6 +60,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/js-cookie": "^3.0.2",
-    "redux-saga-test-plan": "^4.0.5"
+    "redux-saga-test-plan": "^4.0.5",
+    "ts-node": "^10.8.2"
   }
 }

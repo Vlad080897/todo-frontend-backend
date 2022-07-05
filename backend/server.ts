@@ -11,7 +11,7 @@ mongoose.connect('mongodb+srv://mern_app:test123@cluster0.k6nxz.mongodb.net/?ret
     })
   })
   .catch((err: Error) => {
-    //console.log(err)
+    console.log(err)
   });
 
 app.use(express.json());

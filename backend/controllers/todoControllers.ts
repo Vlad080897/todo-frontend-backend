@@ -43,7 +43,7 @@ export const clearCompleted = async (req: Request, res: Response<string | { err:
     const tasks: TaskType[] = await Todo.deleteMany({ completed: true });
     res.status(200).json('Chosen tasks successfully deleted');
   } catch (error) {
-    return res.status(404).json({ err: 'Todo validation failed' })
+    return res.status(404).json({ err: 'Something went wrong' })
   }
 }
 
@@ -53,7 +53,7 @@ export const checkAll = async (req: Request<{}, {}, { completedValue: boolean }>
     const tasks: [TaskType] = await Todo.updateMany({}, { $set: { completed: completedValue } });
     return res.status(200).json(tasks);
   } catch (error) {
-    return res.status(404).json({ error: 'Todo validation failed' })
+    return res.status(404).json({ error: 'Something went wrong' })
   }
 }
 

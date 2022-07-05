@@ -31,7 +31,7 @@ export const getUser = (req: Request, res: Response<UserType | null>) => {
   if (token) {
     jwt.verify(token, 'asfasfasfsdnlsbkbqwi', async (err: Error, decodedToken: { id: string }) => {
       if (err) {
-        res.status(200).json(null);
+        res.status(403).json(null);
       } else {
         const { id } = decodedToken;
         const user = await User.findOne({ _id: id });
@@ -53,13 +53,13 @@ export const loginPost =
       res.cookie('jwt', token, { maxAge: 10000 })
       res.status(200).json({ user, refreshToken });
     } catch (err) {
-      res.status(404).json({ error: err.message })
+      res.status(401).json({ error: err.message })
     }
   }
 
 export const signupPost =
   async (req: Request<{}, {}, { email: string, password: string }>,
-    res: Response<{ id: string, userEmail: string } | { errors: { email: string, password: string } }>) => {
+    res: Response<{ id: string, userEmail: string } | { error: { email: string, password: string } }>) => {
     const { email, password } = req.body
     try {
       const user = await User.create({ email, password });
@@ -67,8 +67,8 @@ export const signupPost =
       res.cookie('jwt', token, { maxAge: 10000 })
       res.status(200).json({ id: user._id, userEmail: user.email })
     } catch (err) {
-      const errors = handleError(err);
-      res.status(404).json({ errors });
+      const error = handleError(err);
+      res.status(401).json({ error });
     }
   }
 

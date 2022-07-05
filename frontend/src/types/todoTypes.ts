@@ -53,3 +53,7 @@ export type ResponseUserType = {
   __v: 0
   _id: string
 }
+
+export type getUserAction = {
+  type: string
+}

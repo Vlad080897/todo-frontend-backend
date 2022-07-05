@@ -45,7 +45,8 @@ export function* addNewTask(action: AddNewTaskAction) {
     }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
-      if (error.response.status === ServerResponse.NOT_AUTH) {
+      const notAuth = error.response.status === (ServerResponse.NOT_AUTH) || error.response.status === (ServerResponse.INCORRECT_TOKEN)
+      if (notAuth) {
         yield put(authActions.getUserAuthSucsses(null));
         return;
       }
@@ -65,7 +66,8 @@ export function* deleteTask(action: DeleteTaskAction) {
     }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
-      if (error.response.status === ServerResponse.NOT_AUTH) {
+      const notAuth = error.response.status === (ServerResponse.NOT_AUTH) || error.response.status === (ServerResponse.INCORRECT_TOKEN)
+      if (notAuth) {
         yield put(authActions.getUserAuthSucsses(null));
         return;
       }
@@ -86,7 +88,8 @@ export function* completeTask(action: completeTaskAction) {
     }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
-      if (error.response.status === ServerResponse.NOT_AUTH) {
+      const notAuth = error.response.status === (ServerResponse.NOT_AUTH) || error.response.status === (ServerResponse.INCORRECT_TOKEN)
+      if (notAuth) {
         yield put(authActions.getUserAuthSucsses(null));
         return;
       }
@@ -96,32 +99,29 @@ export function* completeTask(action: completeTaskAction) {
   }
 }
 
-export function* clearCompleted(action: {
-  type: string
-}) {
+export function* clearCompleted() {
   yield put(actions.clearTasksRequest());
   try {
     const response: (AxiosResponse<string | any> | undefined) = yield todoApi.clearCompleted();
-
     if (response?.status === ServerResponse.SUCSSES) {
       const tasks: TaskType[] = yield select(getTasksSelector);
       const newTasks = tasks.filter(t => t.completed !== true);
       yield put(actions.clearTasksSucsses({ newTasks: newTasks }))
     }
-
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
-      if (error.response.status === ServerResponse.NOT_AUTH) {
+      const notAuth = error.response.status === (ServerResponse.NOT_AUTH) || error.response.status === (ServerResponse.INCORRECT_TOKEN)
+      if (notAuth) {
         yield put(authActions.getUserAuthSucsses(null));
         return
       }
-      const massage = error.message;
+      const massage = (error.response.data as { error: string }).error
       yield put(actions.clearTasksFailed({ massage }));
     }
   }
 }
 
-function* checkAll(action: {
+export function* checkAll(action: {
   type: string,
   checkAllBtn: React.RefObject<HTMLInputElement | null>
 }) {
@@ -130,8 +130,8 @@ function* checkAll(action: {
   try {
     if (haveNotCompleted && tasks.length) {
       yield put(actions.checkAllRequest());
-      const response: AxiosResponse<any, any> = yield todoApi.checkAll(true);
-      if (response.status === ServerResponse.SUCSSES) {
+      const response: (AxiosResponse<any, any> | undefined) = yield todoApi.checkAll(true);
+      if (response?.status === ServerResponse.SUCSSES) {
         const newTasks = tasks.map(t => {
           return {
             ...t,
@@ -159,51 +159,54 @@ function* checkAll(action: {
     }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
-      if (error.response.status === ServerResponse.NOT_AUTH) {
+      const notAuth = error.response.status === (ServerResponse.NOT_AUTH) || error.response.status === (ServerResponse.INCORRECT_TOKEN)
+      if (notAuth) {
         yield put(authActions.getUserAuthSucsses(null));
         return;
       }
-      const massage = error.message;
+      const massage = (error.response.data as { error: string }).error
       yield put(actions.checkAllFailed({ massage }));
     }
   }
 }
 
-function* toggleEditMode(action: ToggleEditMode) {
+export function* toggleEditMode(action: ToggleEditMode) {
   yield put(actions.toggleRequest());
   const { id, description, isEdit } = action;
   try {
-    const response: AxiosResponse<TaskType, any> = yield todoApi.toggleEditMode(id, isEdit)
-    if (response.status === ServerResponse.SUCSSES) {
+    const response: (AxiosResponse<TaskType, any> | undefined) = yield todoApi.toggleEditMode(id, isEdit)
+    if (response?.status === ServerResponse.SUCSSES) {
       yield put(actions.toggleSucsses({ id, description }))
     }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
-      if (error.response.status === ServerResponse.NOT_AUTH) {
+      const notAuth = error.response.status === (ServerResponse.NOT_AUTH) || error.response.status === (ServerResponse.INCORRECT_TOKEN)
+      if (notAuth) {
         yield put(authActions.getUserAuthSucsses(null));
         return;
       }
-      const massage = error.message;
+      const massage = (error.response.data as { error: string }).error
       yield put(actions.toggleFailed({ massage }));
     }
   }
 }
 
-function* updateTask(action: ToggleEditMode) {
+export function* updateTask(action: ToggleEditMode) {
   yield put(actions.toggleRequest());
   const { id, description, isEdit } = action
   try {
-    const response: AxiosResponse<TaskType, any> = yield todoApi.updateValue(id, isEdit, description)
-    if (response.status === ServerResponse.SUCSSES) {
+    const response: AxiosResponse<TaskType, any> | undefined = yield todoApi.updateValue(id, isEdit, description)
+    if (response?.status === ServerResponse.SUCSSES) {
       yield put(actions.toggleSucsses({ id, description }))
     }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
-      if (error.response.status === ServerResponse.NOT_AUTH) {
+      const notAuth = error.response.status === (ServerResponse.NOT_AUTH) || error.response.status === (ServerResponse.INCORRECT_TOKEN)
+      if (notAuth) {
         yield put(authActions.getUserAuthSucsses(null));
         return
       }
-      const massage = error.message;
+      const massage = (error.response.data as { error: string }).error
       yield put(actions.toggleFailed({ massage }));
     }
   }
