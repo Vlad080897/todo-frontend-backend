@@ -1,11 +1,12 @@
 export interface TaskType {
   completed: boolean
-  createdAt: string
+  createdAt?: string
   description: string
   isEdit: boolean
-  updatedAt: string
-  __v: number
-  _id: string
+  updatedAt?: string
+  __v?: number
+  _id?: string,
+
 }
 
 export type UserType = {

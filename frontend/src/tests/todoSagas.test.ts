@@ -1,5 +1,3 @@
-import { all } from './../routes/routes';
-import { CLEAR_TASKS, CHECK_ALL } from './../actions/actionsNames';
 import { AxiosError } from 'axios';
 import { runSaga } from 'redux-saga';
 import { expectSaga } from 'redux-saga-test-plan';
@@ -9,6 +7,7 @@ import { actions } from '../actions/todosActions';
 import { todoApi } from '../api/todoApi';
 import { addNewTask, checkAll, clearCompleted, completeTask, deleteTask, getTasks, toggleEditMode, updateTask } from '../sagas/todoSaga';
 import { TaskType } from '../types/todoTypes';
+import { CHECK_ALL, CLEAR_TASKS } from './../actions/actionsNames';
 
 const allTasks = [
   {

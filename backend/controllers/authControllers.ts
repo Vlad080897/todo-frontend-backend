@@ -19,7 +19,7 @@ export const handleError = (err: CredentialsErrorType) => {
 }
 
 const createToken = (id: string) => {
-  return jwt.sign({ id }, 'asfasfasfsdnlsbkbqwi', { expiresIn: '5s' });
+  return jwt.sign({ id }, 'asfasfasfsdnlsbkbqwi', { expiresIn: '30m' });
 };
 const createRefreshToken = (user: UserType) => {
   return jwt.sign({ user }, '1234test', { expiresIn: '24h' });
@@ -50,7 +50,7 @@ export const loginPost =
       const user = await User.login(email, password);
       const token = createToken(user._id);
       const refreshToken = createRefreshToken(user)
-      res.cookie('jwt', token, { maxAge: 10000 })
+      res.cookie('jwt', token, { maxAge: 1000 * 60 * 30 })
       res.status(200).json({ user, refreshToken });
     } catch (err) {
       res.status(401).json({ error: err.message })
@@ -64,7 +64,7 @@ export const signupPost =
     try {
       const user = await User.create({ email, password });
       const token = createToken(user._id);
-      res.cookie('jwt', token, { maxAge: 10000 })
+      res.cookie('jwt', token, { maxAge: 1000 * 60 * 30 })
       res.status(200).json({ id: user._id, userEmail: user.email })
     } catch (err) {
       const error = handleError(err);
@@ -81,7 +81,7 @@ export const getNewToken = (req: Request<{}, {}, { refreshToken: string }>, res:
       } else {
         const { user } = decodedToken
         const newToken = createToken(user._id);
-        res.cookie('jwt', newToken, { maxAge: 5000 })
+        res.cookie('jwt', newToken, { maxAge: 1000 * 60 * 30 })
         res.status(200).json({ id: user._id })
       }
     })

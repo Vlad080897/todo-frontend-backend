@@ -29,7 +29,7 @@ const App = () => {
       <UserInfo />
       <div className="todoapp">
         <Error error={error} />
-        <Header />
+        <Header user={user} />
         <Todo />
         <Footer />
       </div>

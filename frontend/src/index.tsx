@@ -5,6 +5,9 @@ import AppRoutes from './components/AppRoutes';
 import './index.css';
 import { store } from './redux/store';
 
+
+//export const socket: Socket = io();
+
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 

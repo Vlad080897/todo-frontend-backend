@@ -6,12 +6,11 @@ import { privateRoutes, publicRoutes } from '../routes/routes';
 import { getLoading, getUserSelector } from '../selectors/userSelectors';
 import Login from './Login';
 
-
 const AppRoutes = () => {
   const dispatch = useDispatch();
   const user = useSelector(getUserSelector);
   const loading = useSelector(getLoading);
-  
+
   useEffect(() => {
     dispatch({ type: GET_USER.CALL });
   }, [])

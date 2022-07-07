@@ -6,6 +6,7 @@ import {
 } from "../actions/actionsNames";
 import { authActions } from '../actions/authActions';
 import { actions } from '../actions/todosActions';
+import { socket } from '../components/Header';
 import { CLEAR_TASKS } from './../actions/actionsNames';
 import { todoApi } from './../api/todoApi';
 import { ServerResponse } from './../enums/todoEnums';
@@ -84,6 +85,8 @@ export function* completeTask(action: completeTaskAction) {
     const response: (AxiosResponse<TaskType, any> | undefined) = yield todoApi.completeTask(id, !completed)
     if (response?.status === ServerResponse.SUCSSES) {
       const id = response.data._id
+
+      //@ts-ignore
       yield put(actions.completeTaskSucsses({ id }));
     }
   } catch (error) {
