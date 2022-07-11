@@ -1,5 +1,5 @@
 import { useFormik } from 'formik'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
@@ -28,25 +28,25 @@ const Task: React.FC<CurrentTaskType> = ({ task, socket }) => {
     inputRef.current?.focus()
   }, [isEdit])
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     socket.emit('delete-task', { id: _id, userId })
     dispatch({ type: DELETE_TASK.CALL, id: _id })
-  }
+  }, [])
 
-  const handleComplete = () => {
+  const handleComplete = useCallback(() => {
     dispatch({ type: COMPLETE_TASK.CALL, id: _id, completed, path: location.pathname });
-  }
+  }, [task.completed])
 
-  const handleBlur = () => {
+  const handleBlur = useCallback(() => {
     if (isBlur) {
       dispatch({ type: UPDATE.CALL, id: _id, description: formik.values.description, isEdit })
     }
-  }
+  }, [isEdit, isBlur, formik.values.description])
 
-  const handleToggle = () => {
+  const handleToggle = useCallback(() => {
     setIsBlur(true);
     dispatch({ type: TOGGLE.CALL, description, id: _id, isEdit })
-  }
+  }, [isEdit, isBlur])
 
   return (
     <li className={`${isEdit ? 'editing' : ''}`}>

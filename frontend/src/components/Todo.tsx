@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
@@ -16,53 +16,53 @@ const Todo: React.FC<{ userId: string | null, socket: Socket }> = ({ userId, soc
   const [currentTasks, setCurrentTasks] = useState<TaskType[]>()
   const loading = useSelector(getLoadingSelector);
   const checkAllBtn = useRef<HTMLInputElement | null>(null);
-  const haveNotCompleted = tasks.find(t => t.completed === false);
+  const haveNotCompleted = useMemo(() => tasks.find(t => t.completed === false), [tasks])
 
+  useEffect(() => {
 
-  const isAllChecked = () => {
-    if (checkAllBtn.current) {
-      if (haveNotCompleted) {
-        checkAllBtn.current.checked = false;
+    const isAllChecked = () => {
+      console.log('here');
 
-      }
-      if (!haveNotCompleted && tasks.length) {
-        const fromLocal = tasks.find(t => t.completed === false);
-        if (fromLocal) {
+      if (checkAllBtn.current) {
+        if (haveNotCompleted) {
           checkAllBtn.current.checked = false;
+
+        }
+        if (!haveNotCompleted && tasks.length) {
+          const fromLocal = tasks.find(t => t.completed === false);
+          if (fromLocal) {
+            checkAllBtn.current.checked = false;
+            return;
+          };
+          checkAllBtn.current.checked = true;
           return;
         };
-        checkAllBtn.current.checked = true;
-        return;
-      };
-      checkAllBtn.current.checked = false;
+        checkAllBtn.current.checked = false;
+      }
     }
-  }
-
-  const sortByPath = () => {
-    if (path.includes(active)) {
-      const newTasks = tasks.filter(t => t.completed === false);
-      setCurrentTasks(newTasks);
-      return;
-    }
-    if (path.includes(completed)) {
-      const newTasks = tasks.filter(t => t.completed === true);
-      setCurrentTasks(newTasks);
-      return;
-    }
-    setCurrentTasks(tasks)
-  }
-
-  useEffect(() => {
     isAllChecked();
-  }, [tasks])
+  }, [tasks, haveNotCompleted])
 
   useEffect(() => {
+    const sortByPath = () => {
+      if (path.includes(active)) {
+        const newTasks = tasks.filter(t => t.completed === false);
+        setCurrentTasks(newTasks);
+        return;
+      }
+      if (path.includes(completed)) {
+        const newTasks = tasks.filter(t => t.completed === true);
+        setCurrentTasks(newTasks);
+        return;
+      }
+      setCurrentTasks(tasks)
+    }
     sortByPath();
   }, [tasks, path])
 
-  const handleCheckAll = () => {
+  const handleCheckAll = useCallback(() => {
     dispatch({ type: CHECK_ALL.CALL, checkAllBtn, userId });
-  }
+  }, [userId, dispatch])
 
   return (
     <section className="main">

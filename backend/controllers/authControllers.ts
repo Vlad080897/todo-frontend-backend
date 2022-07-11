@@ -25,7 +25,6 @@ const createRefreshToken = (user: UserType) => {
   return jwt.sign({ user }, '1234test', { expiresIn: '24h' });
 };
 
-
 export const getUser = (req: Request, res: Response<UserType | null>) => {
   const token = (req.cookies as { jwt: string }).jwt;
   if (token) {
