@@ -64,7 +64,7 @@ describe('Auth-sagas', () => {
     const action = {
       type: SIGN_UP.CALL,
       email: 'email',
-      password: '123'
+      password: '1234567'
     }
 
     test('sign-up-success', async () => {
@@ -114,7 +114,7 @@ describe('Auth-sagas', () => {
         {
           type: GET_USER.FAILED,
           payload: {
-            massage: "Invalid email",
+            massage: `${action.password.length > 6 ? "Invalid email" : "'Pass shouldn\'t be less than 6 symbols'"}`,
           }
         }
       ])

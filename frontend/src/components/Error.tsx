@@ -1,7 +1,5 @@
-import { Alert, AlertTitle } from '@mui/material'
-import React from 'react'
-import { useAppSelector } from '../redux/hooks'
-import { getError } from '../selectors/todoSelectors';
+import { Alert, AlertTitle } from '@mui/material';
+import React from 'react';
 
 const Error: React.FC<{ error: string | null }> = ({ error }) => {
   return (

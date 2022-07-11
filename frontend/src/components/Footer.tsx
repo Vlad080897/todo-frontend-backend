@@ -1,10 +1,11 @@
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CLEAR_TASKS } from '../actions/actionsNames';
 import { active, all, completed } from '../routes/routes';
 import { getAllTasksLength, getTasksSelector } from '../selectors/todoSelectors';
 
-const Footer: React.FC = () => {
+const Footer: React.FC<{ userId: string | null }> = ({ userId }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -14,7 +15,7 @@ const Footer: React.FC = () => {
   const haveCompleted = useSelector(getTasksSelector).filter(t => t.completed === true).length
 
   const handleClearCompleted = () => {
-    dispatch({ type: CLEAR_TASKS.CALL });
+    dispatch({ type: CLEAR_TASKS.CALL, userId });
   }
 
   const updatePath = (path: string) => {

@@ -53,7 +53,7 @@ export const loginPost =
       res.cookie('jwt', token, { maxAge: 1000 * 60 * 30 })
       res.status(200).json({ user, refreshToken });
     } catch (err) {
-      res.status(401).json({ error: err.message })
+      res.status(401).json({ error: 'Invalid email or pass. If you don\'t have an account you can sign up' })
     }
   }
 
@@ -72,7 +72,7 @@ export const signupPost =
     }
   }
 
-export const getNewToken = (req: Request<{}, {}, { refreshToken: string }>, res: Response<{ id: string } | { user: null } | string>) => {
+export const getNewToken = (req: Request<{}, {}, { refreshToken: string }>, res: Response<{ id: string } | { user: null } | { error: string; }>) => {
   const { refreshToken } = req.body
   if (refreshToken) {
     jwt.verify(refreshToken, '1234test', (err: Error, decodedToken: { user: UserType }) => {
@@ -87,7 +87,7 @@ export const getNewToken = (req: Request<{}, {}, { refreshToken: string }>, res:
     })
     return;
   }
-  res.status(401).json('User is not authorized')
+  res.status(401).json({ error: 'Check the email/pass or sign up' })
 }
 
 export const logout = (_, res: Response<null>) => {

@@ -16,11 +16,11 @@ export const todoApi = {
   completeTask: (id: string, completedValue: boolean) => {
     return $axios.patch<AxiosResponse<ResponseType, any>>(`/api/todos/${id}`, { completed: completedValue });
   },
-  clearCompleted: () => {
-    return $axios.patch('api/todos/clear').then(res => res);
+  clearCompleted: (id: string) => {
+    return $axios.patch('api/todos/clear', { id }).then(res => res);
   },
-  checkAll: (completedValue: boolean) => {
-    return $axios.patch('api/todos/check_all', { completedValue }).then(res => res)
+  checkAll: (completedValue: boolean, id: string) => {
+    return $axios.patch('api/todos/check_all', { completedValue, id }).then(res => res)
   },
   toggleEditMode: (id: string, editMode: boolean) => {
     return $axios.patch(`api/todos/${id}`, { isEdit: !editMode })

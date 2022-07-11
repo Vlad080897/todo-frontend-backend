@@ -28,7 +28,6 @@ export const addTask = async (req: Request<{}, {}, { description: string }>, res
 export const deleteTasks = async (req: Request<{ id: string }>, res: Response<{ deletedTask: TaskType } | { error: string }>) => {
   const id = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    console.log('here');
     return res.status(404).json({ error: 'No such task' })
   };
   const task = await Todo.findByIdAndDelete({ _id: id })
@@ -38,19 +37,20 @@ export const deleteTasks = async (req: Request<{ id: string }>, res: Response<{ 
   return res.status(200).json({ deletedTask: task });
 }
 
-export const clearCompleted = async (req: Request, res: Response<string | { err: string }>) => {
+export const clearCompleted = async (req: Request<{}, {}, { id: string }>, res: Response<string | { err: string }>) => {
+  const { id } = req.body
   try {
-    const tasks: TaskType[] = await Todo.deleteMany({ completed: true });
+    const tasks: TaskType[] = await Todo.find({ userId: id }).deleteMany({ completed: true });
     res.status(200).json('Chosen tasks successfully deleted');
   } catch (error) {
     return res.status(404).json({ err: 'Something went wrong' })
   }
 }
 
-export const checkAll = async (req: Request<{}, {}, { completedValue: boolean }>, res: Response<TaskType[] | { error: string }>) => {
-  const { completedValue } = req.body;
+export const checkAll = async (req: Request<{}, {}, { id, completedValue: boolean }>, res: Response<TaskType[] | { error: string }>) => {
+  const { id, completedValue } = req.body;
   try {
-    const tasks: [TaskType] = await Todo.updateMany({}, { $set: { completed: completedValue } });
+    const tasks: [TaskType] = await Todo.updateMany({ userId: id }, { $set: { completed: completedValue } });
     return res.status(200).json(tasks);
   } catch (error) {
     return res.status(404).json({ error: 'Something went wrong' })

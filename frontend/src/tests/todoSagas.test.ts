@@ -11,6 +11,7 @@ import { CHECK_ALL, CLEAR_TASKS } from './../actions/actionsNames';
 
 const allTasks = [
   {
+    userId: '1',
     completed: false,
     createdAt: 'test',
     description: 'test',
@@ -20,6 +21,7 @@ const allTasks = [
     _id: '1'
   },
   {
+    userId: '2',
     completed: true,
     createdAt: 'test2',
     description: 'test2',
@@ -31,6 +33,7 @@ const allTasks = [
 ];
 
 const task = {
+  userId: '3',
   completed: false,
   createdAt: 'test',
   description: 'test',
@@ -372,13 +375,19 @@ describe('Todo-sagas', () => {
 
     let dispatched: actionType[] = [];
 
+    const action = {
+      type: CLEAR_TASKS.CALL,
+      userId: '1'
+    }
+
     beforeEach(() => {
       dispatched = []
     })
 
     type actionType = {
       type: string,
-      payload?: { newTasks: TaskType[] } | { massage: string }
+      payload?: { newTasks: TaskType[] } | { massage: string },
+      userId: string
     }
 
     test('clear-success', async () => {
@@ -390,9 +399,10 @@ describe('Todo-sagas', () => {
         getState: () => ({ todoReducer: { tasks: allTasks } })
       },
         //@ts-ignore
-        clearCompleted).toPromise()
+        clearCompleted, action).toPromise()
 
       expect(todoApi.clearCompleted).toHaveBeenCalledTimes(1);
+      expect(todoApi.clearCompleted).toHaveBeenCalledWith(action.userId)
       expect(dispatched).toEqual([
         {
           type: CLEAR_TASKS.REQUEST
@@ -408,6 +418,7 @@ describe('Todo-sagas', () => {
               "description": "test",
               "isEdit": false,
               "updatedAt": "test",
+              "userId": "1"
             }]
           }
         }
@@ -424,7 +435,7 @@ describe('Todo-sagas', () => {
         dispatch: (action: actionType) => dispatched.push(action)
       },
         //@ts-ignore
-        clearCompleted).toPromise()
+        clearCompleted, action).toPromise()
 
       expect(dispatched).toEqual([
         { type: CLEAR_TASKS.REQUEST },
@@ -443,7 +454,7 @@ describe('Todo-sagas', () => {
         dispatch: (action: actionType) => dispatched.push(action)
       },
         //@ts-ignore
-        clearCompleted).toPromise()
+        clearCompleted, action).toPromise()
 
 
       expect(dispatched).toEqual([
@@ -464,7 +475,8 @@ describe('Todo-sagas', () => {
 
     const action = {
       type: CHECK_ALL.CALL,
-      checkAllBtn: document.createElement('input') as unknown as React.RefObject<HTMLInputElement | null>
+      checkAllBtn: document.createElement('input') as unknown as React.RefObject<HTMLInputElement | null>,
+      userId: '1'
     }
 
     let dispatched: actionType[] = []
@@ -475,7 +487,8 @@ describe('Todo-sagas', () => {
 
     type actionType = {
       type: string,
-      payload?: { newTasks: TaskType[] } | { massage: string }
+      payload?: { newTasks: TaskType[] } | { massage: string },
+      userId: string
     }
 
     test('check-all-success', async () => {
@@ -491,7 +504,7 @@ describe('Todo-sagas', () => {
         checkAll, action).toPromise()
 
       expect(todoApi.checkAll).toHaveBeenCalledTimes(1);
-      expect(todoApi.checkAll).toHaveBeenCalledWith(true);
+      expect(todoApi.checkAll).toHaveBeenCalledWith(true, action.userId);
       expect(dispatched).toEqual([
         {
           type: CHECK_ALL.REQUEST
@@ -507,7 +520,8 @@ describe('Todo-sagas', () => {
                 isEdit: false,
                 updatedAt: 'test',
                 __v: 0,
-                _id: '1'
+                _id: '1',
+                "userId": "1"
               },
               {
                 completed: true,
@@ -516,7 +530,8 @@ describe('Todo-sagas', () => {
                 isEdit: false,
                 updatedAt: 'test2',
                 __v: 0,
-                _id: '2'
+                _id: '2',
+                "userId": "2"
               }
             ]
           }

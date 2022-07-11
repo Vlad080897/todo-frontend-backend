@@ -24,9 +24,9 @@ userSchema.statics.login = async (email: string, password: string) => {
     if (auth) {
       return user;
     }
-    throw Error('Email or Password is not correct!')
+    throw Error('Invalid email or pass. If you don\'t have an account you can sign up')
   }
-  throw Error('Email or Password is not correct!')
+  throw Error('Invalid email or pass. If you don\'t have an account you can sign up')
 }
 
 // userSchema.pre('save', async function (next) {

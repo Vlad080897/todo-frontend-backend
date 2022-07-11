@@ -18,7 +18,7 @@ $axios.interceptors.response.use((config) => {
         return $axios.request(originalRequest)
       }
     } catch (error) {
-      throw error
+      throw err
     }
   }
   throw err;

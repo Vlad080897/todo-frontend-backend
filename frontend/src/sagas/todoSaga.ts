@@ -6,7 +6,6 @@ import {
 } from "../actions/actionsNames";
 import { authActions } from '../actions/authActions';
 import { actions } from '../actions/todosActions';
-import { socket } from '../components/Header';
 import { CLEAR_TASKS } from './../actions/actionsNames';
 import { todoApi } from './../api/todoApi';
 import { ServerResponse } from './../enums/todoEnums';
@@ -102,10 +101,10 @@ export function* completeTask(action: completeTaskAction) {
   }
 }
 
-export function* clearCompleted() {
+export function* clearCompleted(action: clearComplAction) {
   yield put(actions.clearTasksRequest());
   try {
-    const response: (AxiosResponse<string | any> | undefined) = yield todoApi.clearCompleted();
+    const response: (AxiosResponse<string | any> | undefined) = yield todoApi.clearCompleted(action.userId);
     if (response?.status === ServerResponse.SUCSSES) {
       const tasks: TaskType[] = yield select(getTasksSelector);
       const newTasks = tasks.filter(t => t.completed !== true);
@@ -126,14 +125,15 @@ export function* clearCompleted() {
 
 export function* checkAll(action: {
   type: string,
-  checkAllBtn: React.RefObject<HTMLInputElement | null>
+  checkAllBtn: React.RefObject<HTMLInputElement | null>,
+  userId: string
 }) {
   const tasks: TaskType[] = yield select(getTasksSelector);
   const haveNotCompleted = tasks.find(t => t.completed === false);
   try {
     if (haveNotCompleted && tasks.length) {
       yield put(actions.checkAllRequest());
-      const response: (AxiosResponse<any, any> | undefined) = yield todoApi.checkAll(true);
+      const response: (AxiosResponse<any, any> | undefined) = yield todoApi.checkAll(true, action.userId);
       if (response?.status === ServerResponse.SUCSSES) {
         const newTasks = tasks.map(t => {
           return {
@@ -146,7 +146,7 @@ export function* checkAll(action: {
     }
     if (!haveNotCompleted && tasks.length) {
       yield put(actions.checkAllRequest());
-      const response: AxiosResponse<any, any> = yield todoApi.checkAll(false);
+      const response: AxiosResponse<any, any> = yield todoApi.checkAll(false, action.userId);
       if (response.status === ServerResponse.SUCSSES) {
         const newTasks = tasks.map(t => {
           return {
@@ -227,6 +227,11 @@ export default function* todoSaga() {
 }
 
 export type getTasksActionType = {
+  type: string,
+  userId: string
+}
+
+export type clearComplAction = {
   type: string,
   userId: string
 }

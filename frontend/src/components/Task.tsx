@@ -1,15 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react'
 import { useFormik } from 'formik'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { TaskType } from '../types/todoTypes'
+import { Socket } from 'socket.io-client'
 import { COMPLETE_TASK, DELETE_TASK, TOGGLE, UPDATE } from '../actions/actionsNames'
+import { TaskType } from '../types/todoTypes'
 
-const Task: React.FC<CurrentTaskType> = ({ task }) => {
+const Task: React.FC<CurrentTaskType> = ({ task, socket }) => {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const { _id, completed, description, isEdit } = task;
+  const { _id, completed, description, isEdit, userId } = task;
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isBlur, setIsBlur] = useState<boolean>(false)
 
@@ -28,6 +29,7 @@ const Task: React.FC<CurrentTaskType> = ({ task }) => {
   }, [isEdit])
 
   const handleDelete = () => {
+    socket.emit('delete-task', { id: _id, userId })
     dispatch({ type: DELETE_TASK.CALL, id: _id })
   }
 
@@ -45,6 +47,7 @@ const Task: React.FC<CurrentTaskType> = ({ task }) => {
     setIsBlur(true);
     dispatch({ type: TOGGLE.CALL, description, id: _id, isEdit })
   }
+
   return (
     <li className={`${isEdit ? 'editing' : ''}`}>
       <div className="view">
@@ -85,5 +88,6 @@ const Task: React.FC<CurrentTaskType> = ({ task }) => {
 export default Task
 
 interface CurrentTaskType {
-  task: TaskType
+  task: TaskType,
+  socket: Socket
 }

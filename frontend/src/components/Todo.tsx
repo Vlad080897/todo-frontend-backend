@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
+import { Socket } from 'socket.io-client'
 import { CHECK_ALL } from '../actions/actionsNames'
 import { active, completed } from '../routes/routes'
 import { getLoadingSelector, getTasksSelector } from '../selectors/todoSelectors'
 import { TaskType } from '../types/todoTypes'
 import Task from './Task'
 
-const Todo = () => {
+const Todo: React.FC<{ userId: string | null, socket: Socket }> = ({ userId, socket }) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const path = location.pathname;
@@ -60,7 +61,7 @@ const Todo = () => {
   }, [tasks, path])
 
   const handleCheckAll = () => {
-    dispatch({ type: CHECK_ALL.CALL, checkAllBtn });
+    dispatch({ type: CHECK_ALL.CALL, checkAllBtn, userId });
   }
 
   return (
@@ -79,6 +80,7 @@ const Todo = () => {
           <Task
             key={task._id}
             task={task}
+            socket={socket}
           />
         ))}
       </ul>

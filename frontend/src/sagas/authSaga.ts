@@ -24,14 +24,16 @@ export function* getUser() {
         yield put(authActions.getUserAuthSucsses(null));
         return;
       }
-
     }
-
   }
 }
 
 export function* signUp(payload: signUpAndLoginAction) {
   const { email, password } = payload
+  if (password.length < 6) {
+    yield put(authActions.getUserAuthFailed({ massage: 'Pass shouldn\'t be less than 6 symbols' }));
+    return;
+  }
   const hashedPass: string = yield hashPassword(password);
   try {
     const response: (AxiosResponse<{ id: string, userEmail: string }, any> | undefined) = yield authApi.signup(email, hashedPass);
@@ -81,7 +83,7 @@ export function* login(payload: signUpAndLoginAction) {
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
       const massage = (error.response.data as { error: string }).error
-      yield put(authActions.getUserAuthFailed({ massage }))
+      yield put(authActions.getUserAuthFailed({ massage }));
     }
   }
 }

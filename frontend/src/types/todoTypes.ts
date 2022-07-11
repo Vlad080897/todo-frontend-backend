@@ -1,4 +1,5 @@
 export interface TaskType {
+  userId: string
   completed: boolean
   createdAt?: string
   description: string

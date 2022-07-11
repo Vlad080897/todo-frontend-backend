@@ -2,14 +2,17 @@ import { Button, Typography } from '@mui/material'
 import { Box } from '@mui/system';
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Socket } from 'socket.io-client';
 import { LOG_OUT } from '../actions/actionsNames';
 import { getUserSelector } from '../selectors/userSelectors';
 
-const UserInfo = () => {
+const UserInfo: React.FC<{ socket: Socket | null }> = ({ socket }) => {
   const dispatch = useDispatch();
   const user = useSelector(getUserSelector);
   const handleLogOut = () => {
     dispatch({ type: LOG_OUT.CALL })
+    socket?.emit('leave', { userId: user?.id })
+    socket?.off('add-new-task');
   }
   return (
     <>
