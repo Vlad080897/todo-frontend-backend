@@ -73,7 +73,6 @@ const Todo: React.FC<{ userId: string | null, socket: Socket }> = ({ userId, soc
         onChange={handleCheckAll}
         ref={checkAllBtn}
       />}
-
       <label htmlFor="toggle-all"></label>
       <ul className="todo-list" id="todos-wrapper">
         {currentTasks && currentTasks.map(task => (
