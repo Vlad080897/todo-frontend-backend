@@ -1,4 +1,3 @@
-import React from 'react'
 import { FlatList, ListRenderItem, StyleSheet, Text, View } from 'react-native'
 import BouncyCheckbox from 'react-native-bouncy-checkbox'
 import { globalStyles } from '../styles/commonStyles'
