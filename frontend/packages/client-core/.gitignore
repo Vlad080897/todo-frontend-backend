@@ -1,0 +1,10 @@
+*.log
+.DS_Store
+node_modules
+dist
+*.d.ts
+*.js.map
+*.d.ts.map
+src/*.js
+src/**/*.js
+package-lock.json

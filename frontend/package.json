@@ -1,0 +1,34 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "metro-config": "^0.56.0",
+    "ts-node": "^10.8.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.7.4"
+  },
+  "resolutions": {
+    "**/@typescript-eslint/eslint-plugin": "^4.1.1",
+    "**/@typescript-eslint/parser": "^4.1.1",
+    "**/@types/react": "^17",
+    "**/@types/react-dom": "^17"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/react-native",
+      "**/react-native/**",
+      "**/@react-native-async-storage",
+      "**/@react-native-async-storage/**",
+      "@todo/mobile/**",
+      "**/expo",
+      "**/expo/**",
+      "**/jest",
+      "**/jest/**"
+    ]
+  }
+}
