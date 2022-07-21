@@ -28,9 +28,7 @@
       "**/expo",
       "**/expo/**",
       "**/babel-jest",
-      "**/babel-jest/**",
-      "**/jest",
-      "**/jest/**"
+      "**/babel-jest/**"
     ]
   }
 }

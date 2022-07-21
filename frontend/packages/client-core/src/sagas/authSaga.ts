@@ -80,7 +80,7 @@ export function* signUp(payload: signUpAndLoginAction) {
 }
 
 export const hashPassword = async (pass: string) => {
-  const salt = `$${process.env.REACT_APP_PASSWORD_SALT}`;
+  const salt = `\$2a\$10$.jlQg/L7FsaBJEOnLMQUYe`;
 
   const hashedPass = await bcrypt.hash(pass, salt);
   return hashedPass;

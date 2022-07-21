@@ -1,37 +1,36 @@
-import { StyleSheet, Text, View } from "react-native";
-import Header from "./screens/Header";
-import { useFonts } from "expo-font";
-import Todo from "./screens/Todo";
-import Footer from "./screens/Footer";
-import { GET_TASKS } from "@todo/client-core/src/actions/actionsNames";
 import { registerRootComponent } from "expo";
+//@ts-ignore
+import { useFonts } from "expo-font";
+import { StyleSheet, View } from "react-native";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import Footer from "./screens/Footer";
+import Header from "./screens/Header";
+import Todo from "./screens/Todo";
+import { store } from '@todo/client-core/src/redux/store'
+import { useEffect } from "react";
+import { GET_TASKS } from "./actions/actionsNames";
+import Login from "./screens/Login";
+import { getUserSelector } from "@todo/client-core/src/selectors/userSelectors";
+import AppRoot from "./screens/AppRoot";
 
 const App = () => {
+
   const [loaded] = useFonts({
     sansBold: require("./assets/fonts/OpenSans-Bold.ttf"),
     sansReg: require("./assets/fonts/OpenSans-Regular.ttf"),
   });
 
-  console.log("GET_TASKS", GET_TASKS);
-
   if (!loaded) return null;
 
   return (
-    <View style={styles.todoapp}>
-      <Text>HELLO</Text>
-      {/* <Header />
-        <Todo />
-        <Footer /> */}
-    </View>
+    <Provider store={store}>
+      <AppRoot />
+    </Provider>
   );
 };
 
 export default registerRootComponent(App);
 
 const styles = StyleSheet.create({
-  todoapp: {
-    flex: 1,
-    paddingTop: 50,
-    backgroundColor: "#f5f5f5",
-  },
+
 });
