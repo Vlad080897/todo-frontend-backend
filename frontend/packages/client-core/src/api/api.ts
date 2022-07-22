@@ -1,28 +1,32 @@
-import axios, { AxiosError } from 'axios';
-import { ServerResponse } from '../enums/todoEnums';
-import { authApi } from './authApi';
+import axios, { AxiosError } from "axios";
+import commonStore from "../commonStore/commonStore";
+import { ServerResponse } from "../enums/todoEnums";
+import { authApi } from "./authApi";
 
 const $axios = axios.create({
   withCredentials: true,
-  baseURL: "http://10.0.2.2:8000"
-})
+  baseURL: "http://192.168.0.104:8000",
+});
 
-$axios.interceptors.response.use((config) => {
-  return config
-}, async (err: AxiosError) => {
-  const originalRequest = err.config;
-  if (err.response?.status === ServerResponse.NOT_AUTH) {
-    try {
-      const refreshToken = localStorage.getItem('jwt-refresh')
-      const response = await authApi.getNewToken(refreshToken);
-      if (response) {
-        return $axios.request(originalRequest)
+$axios.interceptors.response.use(
+  (config) => {
+    return config;
+  },
+  async (err: AxiosError) => {
+    const originalRequest = err.config;
+    if (err.response?.status === ServerResponse.NOT_AUTH) {
+      try {
+        const refreshToken = commonStore.getItem("jwt-refresh");
+        const response = await authApi.getNewToken(refreshToken as string);
+        if (response) {
+          return $axios.request(originalRequest);
+        }
+      } catch (error) {
+        throw err;
       }
-    } catch (error) {
-      throw err
     }
+    throw err;
   }
-  throw err;
-})
+);
 
-export default $axios
+export default $axios;

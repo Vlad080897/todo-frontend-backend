@@ -6,6 +6,7 @@ import { GET_USER, LOG_IN, LOG_OUT, SIGN_UP } from "../actions/actionsNames";
 import { authActions } from "../actions/authActions";
 import { authApi } from "../api/authApi";
 import { ServerResponse } from "../enums/todoEnums";
+import commonStore from "../commonStore/commonStore";
 
 export function* getUser() {
   yield put(authActions.getUserAuth());
@@ -94,10 +95,13 @@ export function* login(payload: signUpAndLoginAction) {
     const response:
       | AxiosResponse<{ user: ResponseUserType; refreshToken: string }, any>
       | undefined = yield authApi.login(email, hashedPass);
+
+    console.log("response", response);
+
     if (response?.status === ServerResponse.SUCSSES) {
       if (response.data) {
         const { _id, email } = response.data.user;
-        localStorage.setItem("jwt-refresh", response.data.refreshToken);
+        commonStore.setItem("jwt-refresh", response.data.refreshToken);
         yield put(authActions.getUserAuthSucsses({ user: { id: _id, email } }));
         return;
       }
@@ -114,7 +118,7 @@ export function* login(payload: signUpAndLoginAction) {
 
 export function* logout() {
   yield authApi.logout();
-  yield localStorage.removeItem("jwt-refresh");
+  yield commonStore.removeItem("jwt-refresh");
   yield put({ type: LOG_OUT.SUCSSES });
 }
 
