@@ -3,7 +3,8 @@ import { ServerResponse } from '../enums/todoEnums';
 import { authApi } from './authApi';
 
 const $axios = axios.create({
-  withCredentials: true
+  withCredentials: true,
+  baseURL: "http://10.0.2.2:8000"
 })
 
 $axios.interceptors.response.use((config) => {

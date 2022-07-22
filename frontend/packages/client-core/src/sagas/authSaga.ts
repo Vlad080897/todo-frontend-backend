@@ -108,6 +108,7 @@ export function* login(payload: signUpAndLoginAction) {
       const massage = (error.response.data as { error: string }).error;
       yield put(authActions.getUserAuthFailed({ massage }));
     }
+    console.log(error);
   }
 }
 

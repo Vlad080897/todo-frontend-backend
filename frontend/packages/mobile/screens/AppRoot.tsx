@@ -6,7 +6,6 @@ import { getUserSelector } from '@todo/client-core/src/selectors/userSelectors'
 
 const AppRoot = () => {
   const user = useSelector(getUserSelector)
-  console.log(user);
 
   return (
     <View style={styles.todoapp}>

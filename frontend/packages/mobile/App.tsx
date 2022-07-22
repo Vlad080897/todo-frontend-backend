@@ -1,5 +1,4 @@
 import { registerRootComponent } from "expo";
-//@ts-ignore
 import { useFonts } from "expo-font";
 import { StyleSheet, View } from "react-native";
 import { Provider, useDispatch, useSelector } from "react-redux";
@@ -14,7 +13,6 @@ import { getUserSelector } from "@todo/client-core/src/selectors/userSelectors";
 import AppRoot from "./screens/AppRoot";
 
 const App = () => {
-
   const [loaded] = useFonts({
     sansBold: require("./assets/fonts/OpenSans-Bold.ttf"),
     sansReg: require("./assets/fonts/OpenSans-Regular.ttf"),
