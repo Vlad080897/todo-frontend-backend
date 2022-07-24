@@ -1,4 +1,3 @@
-import axios from "axios";
 import $axios from "./api";
 
 export const authApi = {
@@ -15,6 +14,6 @@ export const authApi = {
     return $axios.get('/api/todos/logout');
   },
   getNewToken: (refreshToken: string | null) => {
-    return axios.post('/api/todos/token', { refreshToken }).then(res => res.data);
+    return $axios.post('/api/todos/token', { refreshToken }).then(res => res.data);
   }
 }

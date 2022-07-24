@@ -25,6 +25,8 @@
     "react-dom": "^18.2.0",
     "react-native": "0.68.2",
     "react-native-bouncy-checkbox": "^2.1.10",
+    "react-native-svg": "^12.4.0",
+    "react-native-svg-transformer": "^1.0.0",
     "react-native-web": "0.17.7",
     "react-redux": "^7.2.8",
     "redux": "^4.2.0",

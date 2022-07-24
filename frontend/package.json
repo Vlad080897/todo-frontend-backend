@@ -26,9 +26,7 @@
       "**/@react-native-async-storage/**",
       "@todo/mobile/**",
       "**/expo",
-      "**/expo/**",
-      "**/babel-jest",
-      "**/babel-jest/**"
+      "**/expo/**"
     ]
   }
 }

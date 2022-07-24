@@ -10,6 +10,7 @@ import {
 } from "@todo/client-core/src/selectors/todoSelectors";
 import { TaskType } from "@todo/client-core/src/types/todoTypes";
 import Task from './Task'
+import Loader from './Loader';
 
 const Todo: React.FC<{ userId: string | null, socket: Socket }> = ({ userId, socket }) => {
   const dispatch = useDispatch();
@@ -22,10 +23,7 @@ const Todo: React.FC<{ userId: string | null, socket: Socket }> = ({ userId, soc
   const haveNotCompleted = useMemo(() => tasks.find(t => t.completed === false), [tasks])
 
   useEffect(() => {
-
     const isAllChecked = () => {
-      console.log('here');
-
       if (checkAllBtn.current) {
         if (haveNotCompleted) {
           checkAllBtn.current.checked = false;
@@ -69,7 +67,7 @@ const Todo: React.FC<{ userId: string | null, socket: Socket }> = ({ userId, soc
 
   return (
     <section className="main">
-      {loading ? null : <input
+      {loading ? <Loader /> : <input
         className="toggle-all"
         type="checkbox"
         id="toggle-all"

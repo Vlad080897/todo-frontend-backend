@@ -44,7 +44,11 @@ const Login = () => {
                   style={styles.loginTextField}
                   leading={props => <Icon name="passport" {...props} />}
                 />
-                <Button title='Submit' style={styles.btn} onPress={() => handleSubmit()} />
+                <Button
+                  title='Submit'
+                  style={styles.btn}
+                  onPress={() => handleSubmit()}
+                />
               </Stack>
             </View>
           </View>

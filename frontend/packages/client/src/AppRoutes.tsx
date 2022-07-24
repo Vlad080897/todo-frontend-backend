@@ -8,6 +8,16 @@ import {
   getUserSelector,
 } from "@todo/client-core/src/selectors/userSelectors";
 import Login from './components/Login';
+import CommonStore from '@todo/client-core/src/commonStore/commonStore'
+
+
+CommonStore.setStore({
+  getItem: async (key: string) => await localStorage.getItem(key),
+  setItem: (key: string, value: string) => localStorage.setItem(key, value),
+  removeItem: (key: string) => localStorage.removeItem(key)
+})
+
+
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
