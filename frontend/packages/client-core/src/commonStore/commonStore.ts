@@ -9,19 +9,6 @@ class CommonStore {
   private store: Store
 
   constructor() {
-    const state: { [key: string]: string } = {};
-
-    // this.store = {
-    //   getItem(key: string) {
-    //     return state[key];
-    //   },
-    //   setItem(key: string, value: string) {
-    //     return state[key] = value;
-    //   },
-    //   removeItem(key: string) {
-    //     return delete state[key];
-    //   }
-    // }
     this.store = {}
   }
 

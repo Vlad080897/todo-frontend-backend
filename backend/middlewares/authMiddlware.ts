@@ -13,5 +13,5 @@ export const checkIsUser = (req: Request, res: Response, next: NextFunction) => 
     })
     return;
   }
-  res.status(401).send('User is not autorized');
+  res.status(403).send('User is not autorized');
 }

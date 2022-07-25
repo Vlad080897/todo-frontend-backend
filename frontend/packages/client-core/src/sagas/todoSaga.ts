@@ -196,7 +196,7 @@ export function* toggleEditMode(action: ToggleEditMode) {
 
 export function* updateTask(action: ToggleEditMode) {
   yield put(actions.toggleRequest());
-  const { id, description, isEdit } = action
+  const { id, description, isEdit } = action;
   try {
     const response: AxiosResponse<TaskType, any> | undefined = yield todoApi.updateValue(id, isEdit, description)
     if (response?.status === ServerResponse.SUCSSES) {

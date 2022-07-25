@@ -30,7 +30,7 @@ export const getUser = (req: Request, res: Response<UserType | null>) => {
   if (token) {
     jwt.verify(token, 'asfasfasfsdnlsbkbqwi', async (err: Error, decodedToken: { id: string }) => {
       if (err) {
-        res.status(403).json(null);
+        res.status(401).json(null);
       } else {
         const { id } = decodedToken;
         const user = await User.findOne({ _id: id });
@@ -39,7 +39,7 @@ export const getUser = (req: Request, res: Response<UserType | null>) => {
     })
     return;
   }
-  res.status(401).json(null);
+  res.status(403).json(null);
 }
 
 export const loginPost =
@@ -49,7 +49,7 @@ export const loginPost =
       const user = await User.login(email, password);
       const token = createToken(user._id);
       const refreshToken = createRefreshToken(user)
-      res.cookie('jwt', token, { maxAge: 1000 * 60 * 30 })
+      res.cookie('jwt', token, { maxAge: 2000 })
       res.status(200).json({ user, refreshToken });
     } catch (err) {
       res.status(401).json({ error: 'Invalid email or pass. If you don\'t have an account you can sign up' })

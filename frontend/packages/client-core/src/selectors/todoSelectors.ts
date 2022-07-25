@@ -18,3 +18,7 @@ export const getAllTasksLength = (state: RootState) => {
 export const getError = (state: RootState) => {
   return state.todoReducer.error
 }
+
+export const getLoginError = (state: RootState) => {
+  return state.userReducer.error
+}

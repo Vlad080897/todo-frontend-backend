@@ -1,14 +1,20 @@
-import { StyleSheet, Text, View } from 'react-native'
-import { Stack, TextInput, IconButton, Button } from "@react-native-material/core"
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import React, { useState } from 'react'
+import { Button, Stack, TextInput } from "@react-native-material/core";
+import { LOG_IN, SIGN_UP } from '@todo/client-core/src/actions/actionsNames';
+import { getLoginError } from "@todo/client-core/src/selectors/todoSelectors";
+import { getLoading } from "@todo/client-core/src/selectors/userSelectors";
 import { Formik } from 'formik';
-import { useDispatch } from 'react-redux';
-import { LOG_IN } from '@todo/client-core/src/actions/actionsNames';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 const Login = () => {
-  const [activeForm, setActiveForm] = useState<string>('Login');
+  const [activeForm, setActiveForm] = useState<'Login' | 'Sign Up'>('Login');
+  const loading = useSelector(getLoading)
+  console.log(loading);
+  
+  const error = useSelector(getLoginError);
 
   const dispatch = useDispatch();
 
@@ -17,7 +23,11 @@ const Login = () => {
       initialValues={{ email: '', pass: '' }}
       onSubmit={(values) => {
         const { email, pass } = values
-        dispatch({ type: LOG_IN.CALL, email, password: pass });
+        if (activeForm === "Login") {
+          dispatch({ type: LOG_IN.CALL, email, password: pass });
+          return;
+        }
+        dispatch({ type: SIGN_UP.CALL, email, password: pass });
       }}
     >
       {({ values, handleChange, handleSubmit }) => (
@@ -27,6 +37,7 @@ const Login = () => {
               <Text style={styles.loginTitle}>
                 {activeForm}
               </Text>
+              {error ? <Text style={styles.error}>{error}</Text> : null}
               <Stack>
                 <TextInput
                   label={'Login'}
@@ -45,10 +56,24 @@ const Login = () => {
                   leading={props => <Icon name="passport" {...props} />}
                 />
                 <Button
-                  title='Submit'
+                  title={activeForm}
                   style={styles.btn}
                   onPress={() => handleSubmit()}
+                  disabled={loading}
                 />
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  {activeForm === 'Sign Up' ?
+                    <>
+                      <Text>Already have an account?</Text>
+                      <Button disabled={loading} variant="text" title="Login" onPress={() => setActiveForm('Login')} />
+                    </>
+                    :
+                    <>
+                      <Text>Don't have account yet?</Text>
+                      <Button disabled={loading} variant="text" title="Sign up" onPress={() => setActiveForm('Sign Up')} />
+                    </>
+                  }
+                </View>
               </Stack>
             </View>
           </View>
@@ -64,12 +89,13 @@ const styles = StyleSheet.create({
   loginContainer: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: '#f5f5f5',
   },
   loginBlock: {
     width: '80%',
     height: 400,
-    backgroundColor: 'red',
+
     alignSelf: "center",
   },
   loginTitle: {
@@ -83,5 +109,12 @@ const styles = StyleSheet.create({
   },
   btn: {
     marginTop: 10,
+  },
+  error: {
+    color: 'red',
+    borderWidth: 1,
+    borderColor: 'red',
+    padding: 5,
+    borderRadius: 3
   }
 })

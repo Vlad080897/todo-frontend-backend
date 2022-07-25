@@ -43,6 +43,7 @@ export function* signUp(payload: signUpAndLoginAction) {
     );
     return;
   }
+  yield put(authActions.getUserAuth());
   const hashedPass: string = yield hashPassword(password);
   try {
     const response:
@@ -82,7 +83,6 @@ export function* signUp(payload: signUpAndLoginAction) {
 
 export const hashPassword = async (pass: string) => {
   const salt = `\$2a\$10$.jlQg/L7FsaBJEOnLMQUYe`;
-
   const hashedPass = await bcrypt.hash(pass, salt);
   return hashedPass;
 };
@@ -90,7 +90,7 @@ export const hashPassword = async (pass: string) => {
 export function* login(payload: signUpAndLoginAction) {
   const { email, password } = payload;
   const hashedPass: string = yield hashPassword(password);
-
+  yield put(authActions.getUserAuth());
   try {
     const response:
       | AxiosResponse<{ user: ResponseUserType; refreshToken: string }, any>

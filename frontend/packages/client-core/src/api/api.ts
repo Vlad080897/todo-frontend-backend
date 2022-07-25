@@ -15,19 +15,18 @@ $axios.interceptors.response.use((config) => {
 }, async (err: AxiosError) => {
   const originalRequest: customConfig = err.config;
   if (err.response) {
-    if (err.response.status === ServerResponse.NOT_AUTH && !originalRequest._retry) {
+    if (err.response.status === ServerResponse.INCORRECT_TOKEN && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         const refreshToken = await commonStore.getItem('jwt-refresh');
-        const response = await authApi.getNewToken(refreshToken);
-        if (response) {
-          return $axios.request(originalRequest)
-        }
+        await authApi.getNewToken(refreshToken);
+        return $axios.request(originalRequest)
       } catch (error) {
-        console.log(error);
         throw err
       }
     }
+    return Promise.reject(err);
+
   }
   throw err;
 })
