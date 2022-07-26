@@ -1,7 +1,7 @@
 import { Button } from '@react-native-material/core';
 import { CLEAR_TASKS } from '@todo/client-core/src/actions/actionsNames';
 import { getAllTasksLength, getTasksSelector } from '@todo/client-core/src/selectors/todoSelectors'
-import { getUserSelector } from '@todo/client-core/src/selectors/userSelectors';
+import { getLoading, getUserSelector } from '@todo/client-core/src/selectors/userSelectors';
 import { Dispatch, SetStateAction } from 'react';
 import { StyleSheet, Text, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,7 +12,7 @@ const Footer: React.FC<IFooterProps> = ({ setPath, path }) => {
   const { id } = useSelector(getUserSelector)!;
   const itemsLeft = useSelector(getTasksSelector).filter(t => t.completed !== true).length;
   const haveCompleted = useSelector(getTasksSelector).filter(t => t.completed === true).length;
-  const haveTasks = useSelector(getAllTasksLength)
+  const haveTasks = useSelector(getAllTasksLength);
 
   const handleClear = () => {
     dispatch<{ type: typeof CLEAR_TASKS.CALL, userId: string }>({ type: CLEAR_TASKS.CALL, userId: id });

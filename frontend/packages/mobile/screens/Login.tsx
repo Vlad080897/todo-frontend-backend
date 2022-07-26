@@ -7,20 +7,33 @@ import { Formik } from 'formik';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import * as yup from 'yup';
+
 
 
 const Login = () => {
   const [activeForm, setActiveForm] = useState<'Login' | 'Sign Up'>('Login');
-  const loading = useSelector(getLoading)
-  console.log(loading);
-  
+  const loading = useSelector(getLoading);
   const error = useSelector(getLoginError);
+  const validationSchema = yup.object().shape<{ email: any, pass: any }>({
+    email: yup.string()
+      .required('The field is required'),
+    pass: activeForm === 'Sign Up' ? yup.
+      string()
+      .min(6, 'Can\'t be less than 6 symbols')
+      .required('The field is required')
+      :
+      yup.
+        string()
+        .required('The field is required')
+  })
 
   const dispatch = useDispatch();
 
   return (
     <Formik
       initialValues={{ email: '', pass: '' }}
+      validationSchema={validationSchema}
       onSubmit={(values) => {
         const { email, pass } = values
         if (activeForm === "Login") {
@@ -30,7 +43,7 @@ const Login = () => {
         dispatch({ type: SIGN_UP.CALL, email, password: pass });
       }}
     >
-      {({ values, handleChange, handleSubmit }) => (
+      {({ values, handleChange, handleSubmit, errors, touched }) => (
         <>
           <View style={styles.loginContainer}>
             <View style={styles.loginBlock}>
@@ -47,6 +60,7 @@ const Login = () => {
                   style={styles.loginTextField}
                   leading={props => <Icon name="account" {...props} />}
                 />
+                {errors.email && touched.email ? <Text style={{ color: 'red', paddingLeft: 10 }}>{errors.email}</Text> : null}
                 <TextInput
                   label={'Password'}
                   value={values.pass}
@@ -55,6 +69,7 @@ const Login = () => {
                   style={styles.loginTextField}
                   leading={props => <Icon name="passport" {...props} />}
                 />
+                {errors.pass && touched.pass ? <Text style={{ color: 'red', paddingLeft: 10 }}>{errors.pass}</Text> : null}
                 <Button
                   title={activeForm}
                   style={styles.btn}
@@ -118,3 +133,8 @@ const styles = StyleSheet.create({
     borderRadius: 3
   }
 })
+
+interface yupInterface {
+  'email': string
+  'pass': string
+}

@@ -9,6 +9,7 @@ import {
 } from "@todo/client-core/src/selectors/userSelectors";
 import Login from './components/Login';
 import CommonStore from '@todo/client-core/src/commonStore/commonStore'
+import { changeAxiosInstance } from '@todo/client-core/src/api/api';
 
 
 CommonStore.setStore({
@@ -17,7 +18,7 @@ CommonStore.setStore({
   removeItem: (key: string) => localStorage.removeItem(key)
 })
 
-
+//changeAxiosInstance('http://localhost:8000')
 
 const AppRoutes = () => {
   const dispatch = useDispatch();

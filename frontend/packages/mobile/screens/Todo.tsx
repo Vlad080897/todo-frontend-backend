@@ -1,12 +1,13 @@
 import MaterialIcon from '@expo/vector-icons/MaterialIcons'
 import { Box, TextInput } from '@react-native-material/core'
 import { COMPLETE_TASK, DELETE_TASK, GET_TASKS, TOGGLE, UPDATE } from '@todo/client-core/src/actions/actionsNames'
+import { getError } from '@todo/client-core/src/selectors/todoSelectors'
 import { TaskType } from '@todo/client-core/src/types/todoTypes'
 import { Formik } from 'formik'
 import React, { useEffect } from 'react'
 import { FlatList, ListRenderItem, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import BouncyCheckbox from 'react-native-bouncy-checkbox'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { globalStyles } from '../styles/commonStyles'
 
 const Todo: React.FC<{ id: string, currentTasks: TaskType[] | [] }> = ({ id, currentTasks }) => {
@@ -98,6 +99,7 @@ const Todo: React.FC<{ id: string, currentTasks: TaskType[] | [] }> = ({ id, cur
   return (
     <>
       <View>
+        
         <FlatList
           data={currentTasks}
           renderItem={handleRender}

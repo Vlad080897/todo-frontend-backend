@@ -20,7 +20,6 @@ const AppRoot = () => {
   const [currentTasks, setCurrentTasks] = useState<TaskType[] | []>([]);
   const user = useSelector(getUserSelector);
   const loading = useSelector(getLoading);
-  
 
   useEffect(() => {
     dispatch<{ type: typeof GET_USER.CALL }>({ type: GET_USER.CALL });

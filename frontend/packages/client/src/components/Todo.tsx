@@ -67,13 +67,13 @@ const Todo: React.FC<{ userId: string | null, socket: Socket }> = ({ userId, soc
 
   return (
     <section className="main">
-      {loading ? <Loader /> : <input
+      <input
         className="toggle-all"
         type="checkbox"
         id="toggle-all"
         onChange={handleCheckAll}
         ref={checkAllBtn}
-      />}
+      />
       <label htmlFor="toggle-all"></label>
       <ul className="todo-list" id="todos-wrapper">
         {currentTasks && currentTasks.map(task => (

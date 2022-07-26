@@ -38,8 +38,7 @@ const Header: React.FC<{
     <header className="header">
       <h1>todos</h1>
       <form onSubmit={formik.handleSubmit} style={{ display: 'flex' }}>
-        {loading ? <Loader /> : ''}
-        <input
+        {loading ? <Loader /> : <input
           name='new_todo_description'
           type="text"
           className="new-todo"
@@ -47,7 +46,7 @@ const Header: React.FC<{
           value={formik.values.new_todo_description}
           onChange={formik.handleChange}
           autoFocus
-        />
+        />}
       </form>
     </header>
   )
